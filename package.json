@@ -1,0 +1,27 @@
+{
+  "name": "react-withclasses",
+  "version": "0.1.0",
+  "description": "React wrapper for JSS providing an alternate JSON syntax.",
+  "module": "lib/index.js",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "babel ./src -d ./lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Buechler",
+  "license": "ISC",
+  "dependencies": {
+    "jss": "^8.1.0",
+    "jss-preset-default": "^3.0.0",
+    "prop-types": "^15.5.10"
+  },
+  "peerDependencies": {
+    "react": "^15.6.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1"
+  }
+}
