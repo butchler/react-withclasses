@@ -102,7 +102,7 @@ const STATE_MEDIA_QUERY = 'media-query';
 const STATE_PSEUDO_SELECTOR = 'pseudo-selector';
 
 const addClassToJssStyleSheet = ({
-  jssSheets,
+  jssStyleSheet,
   variantClassNames,
   className,
   block,
@@ -137,14 +137,14 @@ const addClassToJssStyleSheet = ({
 
         // Don't add CSS for empty variants.
         if (variantBlock) {
-          jssSheets.variants[variantClassName] = {};
+          jssStyleSheet[variantClassName] = {};
 
           addClassToJssStyleSheet({
-            jssSheets,
+            jssStyleSheet,
             variantClassNames,
             className: variantClassName,
             block: variantBlock,
-            outputBlock: jssSheets.variants[variantClassName],
+            outputBlock: jssStyleSheet[variantClassName],
             state: STATE_VARIANT,
           });
         }
@@ -161,7 +161,7 @@ const addClassToJssStyleSheet = ({
       outputBlock[`&${pseudoSelector}`] = {};
 
       addClassToJssStyleSheet({
-        jssSheets,
+        jssStyleSheet,
         variantClassNames,
         className,
         block: value,
@@ -175,30 +175,21 @@ const addClassToJssStyleSheet = ({
 
       const mediaQuery = key;
 
-      const mediaQuerySheet = (
-        state === STATE_VARIANT ?
-          jssSheets.variantMediaQueries :
-          jssSheets.mediaQueries
-      );
-
-      if (!mediaQuerySheet[mediaQuery]) {
-        mediaQuerySheet[mediaQuery] = {};
-      }
-
-      mediaQuerySheet[mediaQuery][className] = {};
+      outputBlock[mediaQuery] = {};
 
       addClassToJssStyleSheet({
-        jssSheets,
+        jssStyleSheet,
         variantClassNames,
         className,
         block: value,
-        outputBlock: mediaQuerySheet[mediaQuery][className],
+        outputBlock: outputBlock[mediaQuery],
         state: STATE_MEDIA_QUERY,
       });
     } else if (/^[a-zA-Z-]/.test(key)) {
       // CSS property declaration
       const propertyName = key;
 
+      // TODO: Verify value
       outputBlock[propertyName] = value;
     } else {
       throw new Error(`Invalid key '${key}'`);
@@ -208,26 +199,21 @@ const addClassToJssStyleSheet = ({
 
 const createJssStyleSheet = (styleSheet) => {
   // Convert our stylesheet syntax to JSS's nested syntax.
-  const jssSheets = {
-    classes: {},
-    mediaQueries: {},
-    variants: {},
-    variantMediaQueries: {},
-  };
+  const jssStyleSheet = {};
 
   const classes = {};
 
   objectForEach(styleSheet, (className, block) => {
     const variantClassNames = {};
 
-    jssSheets.classes[className] = {};
+    jssStyleSheet[className] = {};
 
     addClassToJssStyleSheet({
-      jssSheets,
+      jssStyleSheet,
       variantClassNames,
       className,
       block,
-      outputBlock: jssSheets.classes[className],
+      outputBlock: jssStyleSheet[className],
       state: STATE_TOP_LEVEL,
     });
 
@@ -238,16 +224,9 @@ const createJssStyleSheet = (styleSheet) => {
     );
   });
 
-  const jssStyleSheet = {
-    ...jssSheets.classes,
-    ...jssSheets.mediaQueries,
-    ...jssSheets.variants,
-    ...jssSheets.variantMediaQueries,
-  };
+  console.log({ jssStyleSheet, classes });
 
-  console.log({ jssStyleSheet, jssSheets, classes });
-
-  return { jssStyleSheet, classes };
+  return { jssStyleSheet: jssStyleSheet, classes };
 };
 
 const objectForEach = (object, callback) => {
