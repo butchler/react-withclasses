@@ -6,6 +6,7 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "babel ./src -d ./lib",
+    "watch": "babel --watch ./src -d ./lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Adam Buechler",
@@ -20,8 +21,15 @@
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.3",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1"
+    "babel-preset-react": "^6.24.1",
+    "eslint": "^4.8.0",
+    "eslint-config-react-app": "^2.0.1",
+    "eslint-plugin-flowtype": "^2.37.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.4.0"
   }
 }
